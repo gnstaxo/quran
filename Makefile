@@ -8,7 +8,7 @@ OBJS = src/kjv_main.o \
 CFLAGS += -Wall -Isrc/
 LDLIBS += -lreadline
 
-kjv: $(OBJS)
+quran: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LDLIBS)
 
 src/kjv_main.o: src/kjv_main.c src/kjv_config.h src/kjv_data.h src/kjv_match.h src/kjv_ref.h src/kjv_render.h src/strutil.h
@@ -30,4 +30,4 @@ data/kjv_data.c: data/kjv.tsv data/generate.awk src/kjv_data.h
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJS) kjv
+	rm -rf $(OBJS) quran

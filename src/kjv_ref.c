@@ -100,7 +100,7 @@ kjv_parseref(kjv_ref *ref, const char *ref_str)
 
     ref->type = 0;
     ref->book = 0;
-    ref->chapter = 0;
+    ref->chapter = 1;
     ref->chapter_end = 0;
     ref->verse = 0;
     ref->verse_end = 0;
@@ -124,7 +124,7 @@ kjv_parseref(kjv_ref *ref, const char *ref_str)
         return 1;
     }
 
-    if (sscanf(ref_str, ": %u %n", &ref->chapter, &n) == 1 || sscanf(ref_str, "%u %n", &ref->chapter, &n) == 1) {
+    /* if (sscanf(ref_str, ": %u %n", &ref->chapter, &n) == 1 || sscanf(ref_str, "%u %n", &ref->chapter, &n) == 1) {
         // 2, 3, 3a, 4, 5, 6, 9
         ref_str = &ref_str[n];
     } else if (ref_str[0] == '/') {
@@ -136,7 +136,7 @@ kjv_parseref(kjv_ref *ref, const char *ref_str)
         return 0;
     } else {
         return 1;
-    }
+    } */
 
     if (sscanf(ref_str, ": %u %n", &ref->verse, &n) == 1) {
         // 3, 3a, 5, 6
