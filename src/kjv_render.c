@@ -21,7 +21,7 @@ kjv_output_verse(const kjv_verse *verse, FILE *f, const kjv_config *config)
         config->highlighting ?
             ESC_BOLD "%d:%d" ESC_RESET "\t" :
             "%d:%d\t",
-        verse->chapter, verse->verse
+        verse->book, verse->verse
     );
 
     char verse_text[1024];
@@ -83,7 +83,7 @@ kjv_output(const kjv_ref *ref, FILE *f, const kjv_config *config)
                     ESC_UNDERLINE "%s" ESC_RESET " " ESC_BOLD "%d:%d" ESC_RESET "  %s\n" :
                     "%s %d:%d  %s\n",
                 book->name,
-                verse->chapter,
+                verse->book,
                 verse->verse,
                 verse->text
             );
