@@ -24,7 +24,7 @@ kjv_output_verse(const kjv_verse *verse, FILE *f, const kjv_config *config)
         verse->book, verse->verse
     );
 
-    char verse_text[1024];
+    char verse_text[2048];
     strcpy(verse_text, verse->text);
     size_t characters_printed = 0;
     char *word = strtok(verse_text, " ");
