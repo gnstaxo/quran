@@ -108,7 +108,7 @@ main(int argc, char *argv[])
     if (list_books) {
         for (int i = 0; i < kjv_books_length; i++) {
             kjv_book *book = &kjv_books[i];
-            printf("%s (%s)\n", book->name, book->abbr);
+            printf("%s (%d)\n", book->name, book->number);
         }
         return 0;
     }

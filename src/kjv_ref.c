@@ -25,6 +25,7 @@ kjv_freeref(kjv_ref *ref)
 }
 
 
+/*
 static bool
 kjv_bookequal(const char *a, const char *b, bool short_match)
 {
@@ -83,6 +84,7 @@ kjv_scanbook(const char *s, int *n)
     *n = i;
     return mode >= 1;
 }
+*/
 
 int
 kjv_parseref(kjv_ref *ref, const char *ref_str)
@@ -111,11 +113,13 @@ kjv_parseref(kjv_ref *ref, const char *ref_str)
     regfree(&ref->search);
 
     int n = 0;
-    if (kjv_scanbook(ref_str, &n) == 1) {
+    if (sscanf(ref_str, "%u %n", &ref->book, &n) == 1) {
         // 1, 2, 3, 3a, 4, 5, 6, 8, 9
+        /*
         char *bookname = strndup(ref_str, n);
         ref->book = kjv_book_fromname(bookname);
         free(bookname);
+        */
         ref_str = &ref_str[n];
     } else if (ref_str[0] == '/') {
         // 7
