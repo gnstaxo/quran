@@ -3,12 +3,10 @@
 typedef struct {
     int number;
     char *name;
-    char *abbr;
 } kjv_book;
 
 typedef struct {
     int book;
-    int chapter;
     int verse;
     char *text;
 } kjv_verse;

@@ -8,13 +8,10 @@
 #define KJV_REF_EXACT 2
 #define KJV_REF_EXACT_SET 3
 #define KJV_REF_RANGE 4
-#define KJV_REF_RANGE_EXT 5
 
 typedef struct kjv_ref {
     int type;
     unsigned int book;
-    unsigned int chapter;
-    unsigned int chapter_end;
     unsigned int verse;
     unsigned int verse_end;
     intset *verse_set;

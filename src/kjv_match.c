@@ -13,34 +13,20 @@ kjv_verse_matches(const kjv_ref *ref, const kjv_verse *verse)
     switch (ref->type) {
         case KJV_REF_SEARCH:
             return (ref->book == 0 || ref->book == verse->book) &&
-                (ref->chapter == 0 || verse->chapter == ref->chapter) &&
                 regexec(&ref->search, verse->text, 0, NULL, 0) == 0;
 
         case KJV_REF_EXACT:
             return ref->book == verse->book &&
-                (ref->chapter == 0 || ref->chapter == verse->chapter) &&
                 (ref->verse == 0 || ref->verse == verse->verse);
 
         case KJV_REF_EXACT_SET:
             return ref->book == verse->book &&
-                (ref->chapter == 0 || verse->chapter == ref->chapter) &&
                 intset_contains(ref->verse_set, verse->verse);
 
         case KJV_REF_RANGE:
             return ref->book == verse->book &&
-                ((ref->chapter_end == 0 && ref->chapter == verse->chapter) ||
-                    (verse->chapter >= ref->chapter && verse->chapter <= ref->chapter_end)) &&
                 (ref->verse == 0 || verse->verse >= ref->verse) &&
                 (ref->verse_end == 0 || verse->verse <= ref->verse_end);
-
-        case KJV_REF_RANGE_EXT:
-            return ref->book == verse->book &&
-                (
-                    (verse->chapter == ref->chapter && verse->verse >= ref->verse && ref->chapter != ref->chapter_end) ||
-                    (verse->chapter > ref->chapter && verse->chapter < ref->chapter_end) ||
-                    (verse->chapter == ref->chapter_end && verse->verse <= ref->verse_end && ref->chapter != ref->chapter_end) ||
-                    (ref->chapter == ref->chapter_end && verse->chapter == ref->chapter && verse->verse >= ref->verse && verse->verse <= ref->verse_end)
-                );
 
         default:
             return false;
@@ -65,7 +51,7 @@ kjv_chapter_bounds(int i, int direction, int maximum_steps)
         }
 
         const kjv_verse *current = &kjv_verses[i], *next = &kjv_verses[i + direction];
-        if (current->book != next->book || current->chapter != next->chapter) {
+        if (current->book != next->book) {
             break;
         }
         steps++;
