@@ -5,17 +5,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "kjv_data.h"
-#include "kjv_ref.h"
+#include "quran_data.h"
+#include "quran_ref.h"
 
-kjv_ref *
-kjv_newref()
+quran_ref *
+quran_newref()
 {
-    return calloc(1, sizeof(kjv_ref));
+    return calloc(1, sizeof(quran_ref));
 }
 
 void
-kjv_freeref(kjv_ref *ref)
+quran_freeref(quran_ref *ref)
 {
     if (ref) {
         free(ref->search_str);
@@ -25,7 +25,7 @@ kjv_freeref(kjv_ref *ref)
 }
 
 int
-kjv_parseref(kjv_ref *ref, const char *ref_str)
+quran_parseref(quran_ref *ref, const char *ref_str)
 {
     // 1. <book>
     // 2. <book>:?<chapter>

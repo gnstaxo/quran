@@ -1,5 +1,5 @@
 /*
-kjv: Read the Word of God from your terminal
+quran: Read the Word of Allah from your terminal
 
 License: Public domain
 */
@@ -13,10 +13,10 @@ License: Public domain
 #include <readline/history.h>
 #include <sys/ioctl.h>
 
-#include "kjv_config.h"
-#include "kjv_data.h"
-#include "kjv_ref.h"
-#include "kjv_render.h"
+#include "quran_config.h"
+#include "quran_data.h"
+#include "quran_ref.h"
+#include "quran_render.h"
 #include "strutil.h"
 
 const char *
@@ -53,7 +53,7 @@ int
 main(int argc, char *argv[])
 {
     bool is_atty = isatty(STDOUT_FILENO) == 1;
-    kjv_config config = {
+    quran_config config = {
         .highlighting = is_atty,
         .pretty = is_atty,
 
@@ -106,8 +106,8 @@ main(int argc, char *argv[])
     }
 
     if (list_books) {
-        for (int i = 0; i < kjv_books_length; i++) {
-            kjv_book *book = &kjv_books[i];
+        for (int i = 0; i < quran_books_length; i++) {
+            quran_book *book = &quran_books[i];
             printf("%s (%d)\n", book->name, book->number);
         }
         return 0;
@@ -128,23 +128,23 @@ main(int argc, char *argv[])
                 break;
             }
             add_history(input);
-            kjv_ref *ref = kjv_newref();
-            int success = kjv_parseref(ref, input);
+            quran_ref *ref = quran_newref();
+            int success = quran_parseref(ref, input);
             free(input);
             if (success == 0) {
-                kjv_render(ref, &config);
+                quran_render(ref, &config);
             }
-            kjv_freeref(ref);
+            quran_freeref(ref);
         }
     } else {
         char *ref_str = str_join(argc-optind, &argv[optind]);
-        kjv_ref *ref = kjv_newref();
-        int success = kjv_parseref(ref, ref_str);
+        quran_ref *ref = quran_newref();
+        int success = quran_parseref(ref, ref_str);
         free(ref_str);
         if (success == 0) {
-            kjv_render(ref, &config);
+            quran_render(ref, &config);
         }
-        kjv_freeref(ref);
+        quran_freeref(ref);
     }
 
     return 0;

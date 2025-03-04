@@ -1,3 +1,3 @@
 /quran
 *.o
-/data/kjv_data.c
+/data/quran_data.c

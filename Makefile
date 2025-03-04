@@ -1,31 +1,31 @@
-OBJS = src/kjv_main.o \
-       src/kjv_match.o \
-       src/kjv_ref.o \
-       src/kjv_render.o \
+OBJS = src/quran_main.o \
+       src/quran_match.o \
+       src/quran_ref.o \
+       src/quran_render.o \
        src/intset.o \
        src/strutil.o \
-       data/kjv_data.o
+       data/quran_data.o
 CFLAGS += -Wall -Isrc/
 LDLIBS += -lreadline
 
 quran: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LDLIBS)
 
-src/kjv_main.o: src/kjv_main.c src/kjv_config.h src/kjv_data.h src/kjv_match.h src/kjv_ref.h src/kjv_render.h src/strutil.h
+src/quran_main.o: src/quran_main.c src/quran_config.h src/quran_data.h src/quran_match.h src/quran_ref.h src/quran_render.h src/strutil.h
 
-src/kjv_match.o: src/kjv_match.h src/kjv_match.c src/kjv_config.h src/kjv_data.h src/kjv_ref.h
+src/quran_match.o: src/quran_match.h src/quran_match.c src/quran_config.h src/quran_data.h src/quran_ref.h
 
-src/kjv_ref.o: src/kjv_ref.h src/kjv_ref.c src/intset.h src/kjv_data.h
+src/quran_ref.o: src/quran_ref.h src/quran_ref.c src/intset.h src/quran_data.h
 
-src/kjv_render.o: src/kjv_render.h src/kjv_render.c src/kjv_config.h src/kjv_data.h src/kjv_match.h src/kjv_ref.h
+src/quran_render.o: src/quran_render.h src/quran_render.c src/quran_config.h src/quran_data.h src/quran_match.h src/quran_ref.h
 
 src/insetset.o: src/intset.h src/insetset.c
 
 src/strutil.o: src/strutil.h src/strutil.c
 
-data/kjv_data.o: src/kjv_data.h data/kjv_data.c
+data/quran_data.o: src/quran_data.h data/quran_data.c
 
-data/kjv_data.c: data/kjv.tsv data/generate.awk src/kjv_data.h
+data/quran_data.c: data/quran.tsv data/generate.awk src/quran_data.h
 	awk -f data/generate.awk $< > $@
 
 .PHONY: clean

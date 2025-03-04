@@ -11,4 +11,4 @@ typedef struct {
     int context_before;
     int context_after;
     bool context_chapter;
-} kjv_config;
+} quran_config;

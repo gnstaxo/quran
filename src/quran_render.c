@@ -5,16 +5,16 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "kjv_data.h"
-#include "kjv_match.h"
-#include "kjv_render.h"
+#include "quran_data.h"
+#include "quran_match.h"
+#include "quran_render.h"
 
 #define ESC_BOLD "\033[1m"
 #define ESC_UNDERLINE "\033[4m"
 #define ESC_RESET "\033[m"
 
 static void
-kjv_output_verse(const kjv_verse *verse, FILE *f, const kjv_config *config)
+quran_output_verse(const quran_verse *verse, FILE *f, const quran_config *config)
 {
     fprintf(
         f,
@@ -46,9 +46,9 @@ kjv_output_verse(const kjv_verse *verse, FILE *f, const kjv_config *config)
 }
 
 static bool
-kjv_output(const kjv_ref *ref, FILE *f, const kjv_config *config)
+quran_output(const quran_ref *ref, FILE *f, const quran_config *config)
 {
-    kjv_next_data next = {
+    quran_next_data next = {
         .current = 0,
         .next_match = -1,
         .matches = {
@@ -57,10 +57,10 @@ kjv_output(const kjv_ref *ref, FILE *f, const kjv_config *config)
         },
     };
 
-    kjv_verse *last_printed = NULL;
-    for (int verse_id; (verse_id = kjv_next_verse(ref, config, &next)) != -1; ) {
-        kjv_verse *verse = &kjv_verses[verse_id];
-        kjv_book *book = &kjv_books[verse->book - 1];
+    quran_verse *last_printed = NULL;
+    for (int verse_id; (verse_id = quran_next_verse(ref, config, &next)) != -1; ) {
+        quran_verse *verse = &quran_verses[verse_id];
+        quran_book *book = &quran_books[verse->book - 1];
 
         if (config->pretty) {
             if (last_printed == NULL || verse->book != last_printed->book) {
@@ -75,7 +75,7 @@ kjv_output(const kjv_ref *ref, FILE *f, const kjv_config *config)
                     book->name
                 );
             }
-            kjv_output_verse(verse, f, config);
+            quran_output_verse(verse, f, config);
         } else {
             fprintf(
                 f,
@@ -94,7 +94,7 @@ kjv_output(const kjv_ref *ref, FILE *f, const kjv_config *config)
 }
 
 static int
-kjv_render_pretty(const kjv_ref *ref, const kjv_config *config)
+quran_render_pretty(const quran_ref *ref, const quran_config *config)
 {
     int fds[2];
     if (pipe(fds) == -1) {
@@ -127,7 +127,7 @@ kjv_render_pretty(const kjv_ref *ref, const kjv_config *config)
     }
     close(fds[0]);
     FILE *output = fdopen(fds[1], "w");
-    bool printed = kjv_output(ref, output, config);
+    bool printed = quran_output(ref, output, config);
     if (!printed) {
         kill(pid, SIGTERM);
     }
@@ -137,11 +137,11 @@ kjv_render_pretty(const kjv_ref *ref, const kjv_config *config)
 }
 
 int
-kjv_render(const kjv_ref *ref, const kjv_config *config)
+quran_render(const quran_ref *ref, const quran_config *config)
 {
     if (config->pretty) {
-        return kjv_render_pretty(ref, config);
+        return quran_render_pretty(ref, config);
     }
-    kjv_output(ref, stdout, config);
+    quran_output(ref, stdout, config);
     return 0;
 }

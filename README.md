@@ -1,4 +1,4 @@
-Read the Word of God from your terminal
+Read the Word of Allah from your terminal
 
 ## Usage
 

@@ -3,12 +3,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "kjv_data.h"
-#include "kjv_match.h"
+#include "quran_data.h"
+#include "quran_match.h"
 #include "intset.h"
 
 static bool
-kjv_verse_matches(const kjv_ref *ref, const kjv_verse *verse)
+quran_verse_matches(const quran_ref *ref, const quran_verse *verse)
 {
     switch (ref->type) {
         case KJV_REF_SEARCH:
@@ -37,20 +37,20 @@ kjv_verse_matches(const kjv_ref *ref, const kjv_verse *verse)
 #define KJV_DIRECTION_AFTER 1
 
 static int
-kjv_chapter_bounds(int i, int direction, int maximum_steps)
+quran_chapter_bounds(int i, int direction, int maximum_steps)
 {
     assert(direction == KJV_DIRECTION_BEFORE || direction == KJV_DIRECTION_AFTER);
 
     int steps = 0;
-    for ( ; 0 <= i && i < kjv_verses_length; i += direction) {
+    for ( ; 0 <= i && i < quran_verses_length; i += direction) {
         bool step_limit = (maximum_steps != -1 && steps >= maximum_steps) ||
             (direction == KJV_DIRECTION_BEFORE && i == 0) ||
-            (direction == KJV_DIRECTION_AFTER && i + 1 == kjv_verses_length);
+            (direction == KJV_DIRECTION_AFTER && i + 1 == quran_verses_length);
         if (step_limit) {
             break;
         }
 
-        const kjv_verse *current = &kjv_verses[i], *next = &kjv_verses[i + direction];
+        const quran_verse *current = &quran_verses[i], *next = &quran_verses[i + direction];
         if (current->book != next->book) {
             break;
         }
@@ -60,11 +60,11 @@ kjv_chapter_bounds(int i, int direction, int maximum_steps)
 }
 
 static int
-kjv_next_match(const kjv_ref *ref, int i)
+quran_next_match(const quran_ref *ref, int i)
 {
-    for ( ; i < kjv_verses_length; i++) {
-        const kjv_verse *verse = &kjv_verses[i];
-        if (kjv_verse_matches(ref, verse)) {
+    for ( ; i < quran_verses_length; i++) {
+        const quran_verse *verse = &quran_verses[i];
+        if (quran_verse_matches(ref, verse)) {
             return i;
         }
     }
@@ -72,7 +72,7 @@ kjv_next_match(const kjv_ref *ref, int i)
 }
 
 static void
-kjv_next_addrange(kjv_next_data *next, kjv_range range) {
+quran_next_addrange(quran_next_data *next, quran_range range) {
     if (next->matches[0].start == -1 && next->matches[0].end == -1) {
         next->matches[0] = range;
     } else if (range.start < next->matches[0].end) {
@@ -83,28 +83,28 @@ kjv_next_addrange(kjv_next_data *next, kjv_range range) {
 }
 
 int
-kjv_next_verse(const kjv_ref *ref, const kjv_config *config, kjv_next_data *next)
+quran_next_verse(const quran_ref *ref, const quran_config *config, quran_next_data *next)
 {
-    if (next->current >= kjv_verses_length) {
+    if (next->current >= quran_verses_length) {
         return -1;
     }
 
     if (next->matches[0].start != -1 && next->matches[0].end != -1 && next->current >= next->matches[0].end) {
         next->matches[0] = next->matches[1];
-        next->matches[1] = (kjv_range){-1, -1};
+        next->matches[1] = (quran_range){-1, -1};
     }
 
-    if ((next->next_match == -1 || next->next_match < next->current) && next->next_match < kjv_verses_length) {
-        int next_match = kjv_next_match(ref, next->current);
+    if ((next->next_match == -1 || next->next_match < next->current) && next->next_match < quran_verses_length) {
+        int next_match = quran_next_match(ref, next->current);
         if (next_match >= 0) {
             next->next_match = next_match;
-            kjv_range bounds = {
-                .start = kjv_chapter_bounds(next_match, KJV_DIRECTION_BEFORE, config->context_chapter ? -1 : config->context_before),
-                .end = kjv_chapter_bounds(next_match, KJV_DIRECTION_AFTER, config->context_chapter ? -1 : config->context_after) + 1,
+            quran_range bounds = {
+                .start = quran_chapter_bounds(next_match, KJV_DIRECTION_BEFORE, config->context_chapter ? -1 : config->context_before),
+                .end = quran_chapter_bounds(next_match, KJV_DIRECTION_AFTER, config->context_chapter ? -1 : config->context_after) + 1,
             };
-            kjv_next_addrange(next, bounds);
+            quran_next_addrange(next, bounds);
         } else {
-            next_match = kjv_verses_length;
+            next_match = quran_verses_length;
         }
     }
 
